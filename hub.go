@@ -116,7 +116,7 @@ func GetEmptyMap() [][]string {
 	for y := 0; y < gridHeight/gridSize; y++ {
 		grid = append(grid, make([]string, 0))
 		for X := 0; X < gridWidth/gridSize; X++ {
-			grid[y] = append(grid[y], "")
+			grid[y] = append(grid[y], "5")
 		}
 	}
 	return grid
