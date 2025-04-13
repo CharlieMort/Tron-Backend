@@ -87,7 +87,6 @@ func (client *Client) ReadPackets() {
 			pos := strings.Split(packet.Data, ",")
 			x, _ := strconv.Atoi(pos[0])
 			y, _ := strconv.Atoi((pos[1]))
-			fmt.Println("Player Update", x, y, len(client.Hub.rooms[client.RoomCode].grid))
 			client.Hub.rooms[client.RoomCode].grid[y][x] = pos[2]
 			client.Hub.SendRoom(client.RoomCode, Packet{
 				Type: "gameData",
