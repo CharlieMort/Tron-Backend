@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"time"
 )
 
 const gridSize int = 10
@@ -66,7 +65,6 @@ func (h *Hub) CreateRoom() string {
 		clients: make([]*Client, 0),
 		grid:    GetEmptyMap(),
 		scores:  make([]int, 2),
-		ended:   false,
 	}
 	return roomID
 }
@@ -138,16 +136,4 @@ func (h *Hub) EndRound(roomID string, deadPlayer *Client) {
 		Type: "endRound",
 		Data: fmt.Sprintf("%x - %x", room.scores[0], room.scores[1]),
 	})
-	room.ended = true
-	if !room.ended {
-		go func() {
-			time.Sleep(2 * time.Second)
-			room.grid = GetEmptyMap()
-			h.SendRoom(roomID, Packet{
-				Type: "newRound",
-				Data: "",
-			})
-			room.ended = false
-		}()
-	}
 }
