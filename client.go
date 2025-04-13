@@ -28,7 +28,6 @@ type Client struct {
 }
 
 func (client *Client) SendPacket(packet Packet) {
-	log.Println("Sending Packet To Client client.SendPacket")
 	client.Send <- packet
 }
 
