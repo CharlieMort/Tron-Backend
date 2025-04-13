@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"time"
 )
 
 const gridSize int = 10
@@ -54,6 +55,7 @@ type Room struct {
 	clients []*Client
 	roomID  string
 	grid    [][]string
+	scores  []int
 }
 
 func (h *Hub) CreateRoom() string {
@@ -120,4 +122,25 @@ func GetEmptyMap() [][]string {
 		}
 	}
 	return grid
+}
+
+func (h *Hub) EndRound(roomID string, deadPlayer *Client) {
+	room := h.rooms[roomID]
+	if room.clients[0] == deadPlayer {
+		room.scores[1]++
+	} else {
+		room.scores[0]++
+	}
+	h.SendRoom(roomID, Packet{
+		Type: "endRound",
+		Data: string(room.scores[0]) + " - " + string(room.scores[1]),
+	})
+	go func() {
+		time.Sleep(2 * time.Second)
+		room.grid = GetEmptyMap()
+		h.SendRoom(roomID, Packet{
+			Type: "newRound",
+			Data: "",
+		})
+	}()
 }

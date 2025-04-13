@@ -91,6 +91,8 @@ func (client *Client) ReadPackets() {
 				Type: "gameData",
 				Data: packet.Data,
 			})
+		case "playerDead":
+			client.Hub.EndRound(client.RoomCode, client)
 		}
 	}
 }
