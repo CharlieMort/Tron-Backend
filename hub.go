@@ -64,6 +64,7 @@ func (h *Hub) CreateRoom() string {
 		roomID:  roomID,
 		clients: make([]*Client, 0),
 		grid:    GetEmptyMap(),
+		scores:  make([]int, 2),
 	}
 	return roomID
 }
