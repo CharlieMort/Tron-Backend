@@ -56,6 +56,7 @@ type Room struct {
 	roomID  string
 	grid    [][]string
 	scores  []int
+	ended   bool
 }
 
 func (h *Hub) CreateRoom() string {
@@ -65,6 +66,7 @@ func (h *Hub) CreateRoom() string {
 		clients: make([]*Client, 0),
 		grid:    GetEmptyMap(),
 		scores:  make([]int, 2),
+		ended:   false,
 	}
 	return roomID
 }
@@ -134,14 +136,18 @@ func (h *Hub) EndRound(roomID string, deadPlayer *Client) {
 	}
 	h.SendRoom(roomID, Packet{
 		Type: "endRound",
-		Data: string(room.scores[0]) + " - " + string(room.scores[1]),
+		Data: fmt.Sprintf("%x - %x", room.scores[0], room.scores[1]),
 	})
-	go func() {
-		time.Sleep(2 * time.Second)
-		room.grid = GetEmptyMap()
-		h.SendRoom(roomID, Packet{
-			Type: "newRound",
-			Data: "",
-		})
-	}()
+	room.ended = true
+	if !room.ended {
+		go func() {
+			time.Sleep(2 * time.Second)
+			room.grid = GetEmptyMap()
+			h.SendRoom(roomID, Packet{
+				Type: "newRound",
+				Data: "",
+			})
+			room.ended = false
+		}()
+	}
 }
