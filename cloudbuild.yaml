@@ -1,0 +1,15 @@
+steps:
+  # Step 1: Compile the Go Application
+  - name: 'gcr.io/cloud-builders/go'
+    env: ['GOPATH=/gopath']
+    args: ['build', '-o', 'main', 'main.go']
+
+  # Step 2: Build the Docker image for the Go application
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'europe-west2-docker.pkg.dev/blissful-flame-456616-k0/tron-repo/tron-frontend:v1.0', '.']
+
+  # Step 3: Push the Docker image to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'europe-west2-docker.pkg.dev/blissful-flame-456616-k0/tron-repo/tron-frontend:v1.0']
+options:
+ logging: CLOUD_LOGGING_ONLY
